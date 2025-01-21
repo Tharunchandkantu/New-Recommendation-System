@@ -247,25 +247,6 @@ st.markdown("""
     .footer a:hover {
         color: #ff3c4a;
     }
-    
-    .movie-details {
-        background-color: #1f1f1f;
-        border-radius: 15px;
-        padding: 20px;
-        margin-top: 30px;
-        animation: fadeIn 1s;
-    }
-    
-    .movie-details h4 {
-        color: #e50914;
-        font-size: 24px;
-        margin-bottom: 10px;
-    }
-    
-    .movie-details p {
-        font-size: 16px;
-        line-height: 1.6;
-    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -306,13 +287,7 @@ if st.button('🚀 Discover Similar Movies'):
             for j in range(3):
                 if i + j < len(recommended_movie_names):
                     with cols[j]:
-                        st.image(recommended_movie_posters[i+j], caption=recommended_movie_names[i+j], use_column_width=True)
-        
-        # Movie details section
-        st.markdown("<div class='movie-details'>", unsafe_allow_html=True)
-        st.markdown(f"<h4>About {selected_movie}</h4>", unsafe_allow_html=True)
-        st.markdown("<p>This is where you can add more details about the selected movie, such as plot summary, cast, director, release date, etc. You can fetch this information from an API or your database.</p>", unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+                        st.image(recommended_movie_posters[i+j], caption=recommended_movie_names[i+j], use_container_width=True)
 
 # Contact section
 st.markdown("""
