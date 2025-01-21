@@ -70,7 +70,71 @@ def recommend(movie):
         return [], []
 
 # Streamlit app interface
-st.header('Movie Recommender System Using Machine Learning')
+st.set_page_config(page_title="Movie Recommender", page_icon=":movie_camera:", layout="wide")
+
+# Add a header with branding
+st.markdown("""
+    <style>
+        .header {
+            background-image: url('https://wallpapercave.com/wp/wp9049514.jpg');
+            background-size: cover;
+            text-align: center;
+            color: white;
+            padding: 50px 0;
+        }
+        .header h1 {
+            font-size: 50px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold;
+        }
+        .header h3 {
+            font-size: 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .contact-section {
+            background-color: #f2f2f2;
+            padding: 30px;
+            border-radius: 8px;
+        }
+        .contact-section h3 {
+            color: #333;
+            font-size: 26px;
+            font-weight: bold;
+        }
+        .footer {
+            background-color: #222;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+        }
+        .footer a {
+            color: #0e76a8;
+        }
+        .movie-container {
+            margin-top: 20px;
+        }
+        .movie-box {
+            transition: transform 0.2s;
+        }
+        .movie-box:hover {
+            transform: scale(1.1);
+        }
+        .movie-box img {
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+    <div class="header">
+        <h1>Welcome to MovieMaze</h1>
+        <h3>Your Ultimate Movie Recommendation System</h3>
+    </div>
+""", unsafe_allow_html=True)
+
+# Add a description of the app
+st.markdown("""
+    <p style='text-align: center;'>MovieMaze uses machine learning to suggest similar movies based on your favorite movie!</p>
+""", unsafe_allow_html=True)
 
 # Dropdown for movie selection
 movie_list = movies['title'].values
@@ -85,7 +149,25 @@ if st.button('Show Recommendation'):
     if recommended_movie_names and recommended_movie_posters:
         # Display the recommended movies and their posters
         cols = st.columns(5)
-        for col, name, poster in zip(cols, recommended_movie_names, recommended_movie_posters):
-            with col:
-                st.text(name)
-                st.image(poster)
+        with st.container():
+            for col, name, poster in zip(cols, recommended_movie_names, recommended_movie_posters):
+                with col:
+                    st.text(name)
+                    st.image(poster, width=150)
+                    st.markdown(f"<div class='movie-box'>{name}</div>", unsafe_allow_html=True)
+
+# Contact Me section
+st.markdown("""
+    <div class="contact-section">
+        <h3>Contact Me</h3>
+        <p>If you have any questions or feedback, feel free to reach out to me!</p>
+        <p>Email: <a href="mailto:tharunkantu0421@gmail.com">tharunkantu0421@gmail.com</a></p>
+    </div>
+""", unsafe_allow_html=True)
+
+# Footer with your name
+st.markdown("""
+    <div class="footer">
+        Made with ❤️ by <strong>Tharun Chand Kantu</strong>
+    </div>
+""", unsafe_allow_html=True)
