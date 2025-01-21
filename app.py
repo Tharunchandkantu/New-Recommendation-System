@@ -70,104 +70,211 @@ def recommend(movie):
         return [], []
 
 # Streamlit app interface
-st.set_page_config(page_title="Movie Recommender", page_icon=":movie_camera:", layout="wide")
+st.set_page_config(page_title="MovieMaze", page_icon="🎬", layout="wide")
 
-# Add a header with branding
+# Custom CSS for enhanced UI
 st.markdown("""
     <style>
-        .header {
-            background-image: url('https://wallpapercave.com/wp/wp9049514.jpg');
-            background-size: cover;
-            text-align: center;
-            color: white;
-            padding: 50px 0;
-        }
-        .header h1 {
-            font-size: 50px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-weight: bold;
-        }
-        .header h3 {
-            font-size: 30px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .contact-section {
-            background-color: #f2f2f2;
-            padding: 30px;
-            border-radius: 8px;
-        }
-        .contact-section h3 {
-            color: #333;
-            font-size: 26px;
-            font-weight: bold;
-        }
-        .footer {
-            background-color: #222;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            font-size: 18px;
-        }
-        .footer a {
-            color: #0e76a8;
-        }
-        .movie-container {
-            margin-top: 20px;
-        }
-        .movie-box {
-            transition: transform 0.2s;
-        }
-        .movie-box:hover {
-            transform: scale(1.1);
-        }
-        .movie-box img {
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+    
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #0f0f0f;
+        color: #ffffff;
+    }
+    
+    .header {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://wallpaperaccess.com/full/329633.jpg');
+        background-size: cover;
+        background-position: center;
+        text-align: center;
+        padding: 100px 0;
+        border-radius: 0 0 50px 50px;
+        margin-bottom: 30px;
+    }
+    
+    .header h1 {
+        font-size: 60px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .header h3 {
+        font-size: 24px;
+        font-weight: 400;
+        margin-bottom: 20px;
+    }
+    
+    .stSelectbox {
+        background-color: #2c2c2c;
+        color: #ffffff;
+        border-radius: 10px;
+        padding: 5px;
+        margin-bottom: 20px;
+    }
+    
+    .stButton>button {
+        background-color: #e50914;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 30px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton>button:hover {
+        background-color: #b2070e;
+        transform: scale(1.05);
+    }
+    
+    .movie-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-top: 30px;
+    }
+    
+    .movie-box {
+        background-color: #1f1f1f;
+        border-radius: 15px;
+        padding: 15px;
+        margin: 10px;
+        width: 180px;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .movie-box:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(229, 9, 20, 0.3);
+    }
+    
+    .movie-box img {
+        border-radius: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .contact-section {
+        background-color: #1f1f1f;
+        padding: 30px;
+        border-radius: 15px;
+        margin-top: 50px;
+    }
+    
+    .contact-section h3 {
+        color: #e50914;
+        font-size: 28px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+    
+    .contact-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .contact-form input, .contact-form textarea {
+        background-color: #2c2c2c;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        color: #ffffff;
+    }
+    
+    .contact-form button {
+        background-color: #e50914;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        padding: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .contact-form button:hover {
+        background-color: #b2070e;
+    }
+    
+    .footer {
+        background-color: #1f1f1f;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px;
+        margin-top: 50px;
+        border-radius: 15px 15px 0 0;
+    }
+    
+    .footer a {
+        color: #e50914;
+        text-decoration: none;
+    }
     </style>
+    """, unsafe_allow_html=True)
+
+# Header
+st.markdown("""
     <div class="header">
-        <h1>Welcome to MovieMaze</h1>
-        <h3>Your Ultimate Movie Recommendation System</h3>
+        <h1>MovieMaze</h1>
+        <h3>Discover Your Next Cinematic Adventure</h3>
     </div>
 """, unsafe_allow_html=True)
 
-# Add a description of the app
+# App description
 st.markdown("""
-    <p style='text-align: center;'>MovieMaze uses machine learning to suggest similar movies based on your favorite movie!</p>
+    <p style='text-align: center; font-size: 18px; margin-bottom: 30px;'>
+        Embark on a journey through the world of cinema with MovieMaze. Our advanced AI-powered recommendation system 
+        will guide you to your next favorite film based on your current preferences. Let's explore the magic of movies together!
+    </p>
 """, unsafe_allow_html=True)
 
-# Dropdown for movie selection
+# Movie selection
 movie_list = movies['title'].values
 selected_movie = st.selectbox(
-    "Type or select a movie from the dropdown",
+    "🎬 Enter your favorite movie or select from the list",
     movie_list
 )
 
-# Button to show recommendations
-if st.button('Show Recommendation'):
-    recommended_movie_names, recommended_movie_posters = recommend(selected_movie)
+# Recommendation button
+if st.button('🚀 Discover Similar Movies'):
+    with st.spinner('Searching the cinematic universe...'):
+        recommended_movie_names, recommended_movie_posters = recommend(selected_movie)
+    
     if recommended_movie_names and recommended_movie_posters:
-        # Display the recommended movies and their posters
-        cols = st.columns(5)
-        with st.container():
-            for col, name, poster in zip(cols, recommended_movie_names, recommended_movie_posters):
-                with col:
-                    st.text(name)
-                    st.image(poster, width=150)
-                    st.markdown(f"<div class='movie-box'>{name}</div>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center; margin-top: 30px;'>Your Personalized Movie Recommendations</h2>", unsafe_allow_html=True)
+        
+        # Display recommendations in a more visually appealing way
+        st.markdown("<div class='movie-container'>", unsafe_allow_html=True)
+        for name, poster in zip(recommended_movie_names, recommended_movie_posters):
+            st.markdown(f"""
+                <div class='movie-box'>
+                    <img src="{poster}" alt="{name}" style="width:100%; height:auto;">
+                    <h4>{name}</h4>
+                </div>
+            """, unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-# Contact Me section
+# Contact section
 st.markdown("""
     <div class="contact-section">
-        <h3>Contact Me</h3>
-        <p>If you have any questions or feedback, feel free to reach out to me!</p>
-        <p>Email: <a href="mailto:tharunkantu0421@gmail.com">tharunkantu0421@gmail.com</a></p>
+        <h3>Get in Touch</h3>
+        <p>Have questions, suggestions, or just want to talk movies? Reach out to us!</p>
+        <div class="contact-form">
+            <input type="text" placeholder="Your Name">
+            <input type="email" placeholder="Your Email">
+            <textarea placeholder="Your Message" rows="4"></textarea>
+            <button type="submit">Send Message</button>
+        </div>
     </div>
 """, unsafe_allow_html=True)
 
-# Footer with your name
+# Footer
 st.markdown("""
     <div class="footer">
-        Made with ❤️ by <strong>Tharun Chand Kantu</strong>
+        Crafted with 🎬 by <strong>Tharun Chand Kantu</strong> | 
+        <a href="mailto:tharunkantu0421@gmail.com">tharunkantu0421@gmail.com</a> | 
+        <a href="https://www.linkedin.com/in/tharun-chand-kantu/" target="_blank">LinkedIn</a>
     </div>
 """, unsafe_allow_html=True)
