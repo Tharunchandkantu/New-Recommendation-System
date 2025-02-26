@@ -29,9 +29,12 @@ def get_secret():
     return get_secret_value_response['SecretString']
 
 # Retrieve AWS credentials from Secrets Manager
+# Retrieve AWS credentials and other values from Secrets Manager
 aws_secrets = eval(get_secret())
 AWS_ACCESS_KEY_ID = aws_secrets["AWS_ACCESS_KEY_ID"]
 AWS_SECRET_ACCESS_KEY = aws_secrets["AWS_SECRET_ACCESS_KEY"]
+S3_BUCKET_NAME = aws_secrets["S3_BUCKET_NAME"]  # Retrieve the bucket name from the secret
+
 
 # Initialize the S3 client
 s3_client = boto3.client(
