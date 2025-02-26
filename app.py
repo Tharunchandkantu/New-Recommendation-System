@@ -7,27 +7,36 @@ Date: 2025-Jan-21
 import pickle
 import streamlit as st
 import requests
-from azure.storage.blob import BlobServiceClient
+import boto3
+from botocore.exceptions import NoCredentialsError
 import os
 
-# Azure Blob Storage connection details
-AZURE_STORAGE_CONNECTION_STRING = os.getenv('AZURE_STORAGE_CONNECTION_STRING', '<YOUR_AZURE_STORAGE_ACCOUNT_CONNECTION_STRING>')
-CONTAINER_NAME = "pickflix-files"
+# Amazon S3 connection details
+AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', 'AKIAT4GVROHQEVC42HHJ')
+AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', 'kb83tgZsqo0omJ8Dxq4DU2aNRuDJN0u3NAPa22aE')
+S3_BUCKET_NAME = 'moviemaze-s3-storage'  # Replace with your actual S3 bucket name
 
-# Initialize BlobServiceClient
-blob_service_client = BlobServiceClient.from_connection_string(AZURE_STORAGE_CONNECTION_STRING)
+# Initialize the S3 client
+s3_client = boto3.client(
+    's3', 
+    aws_access_key_id=AWS_ACCESS_KEY_ID, 
+    aws_secret_access_key=AWS_SECRET_ACCESS_KEY
+)
 
-def download_blob_to_file(container_name, blob_name, local_file_name):
-    blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob_name)
-    with open(local_file_name, "wb") as file:
-        file.write(blob_client.download_blob().readall())
+def download_file_from_s3(bucket_name, object_name, local_file_name):
+    try:
+        s3_client.download_file(bucket_name, object_name, local_file_name)
+    except NoCredentialsError:
+        st.error("Credentials not available for AWS S3.")
+    except Exception as e:
+        st.error(f"Error downloading file from S3: {e}")
 
-# Download required files from Azure Blob Storage
+# Download required files from S3
 try:
-    download_blob_to_file(CONTAINER_NAME, "movie_list.pkl", "movie_list.pkl")
-    download_blob_to_file(CONTAINER_NAME, "similarity.pkl", "similarity.pkl")
+    download_file_from_s3(S3_BUCKET_NAME, "movie_list.pkl", "movie_list.pkl")
+    download_file_from_s3(S3_BUCKET_NAME, "similarity.pkl", "similarity.pkl")
 except Exception as e:
-    st.error(f"Error downloading files from Azure Blob Storage: {e}")
+    st.error(f"Error downloading files from S3: {e}")
 
 # Load the pickled files
 try:
