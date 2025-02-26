@@ -11,10 +11,7 @@ import boto3
 from botocore.exceptions import NoCredentialsError
 import os
 
-# Amazon S3 connection details
-AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', 'AKIAT4GVROHQEVC42HHJ')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', 'kb83tgZsqo0omJ8Dxq4DU2aNRuDJN0u3NAPa22aE')
-S3_BUCKET_NAME = 'moviemaze-s3-storage'  # Replace with your actual S3 bucket name
+
 
 # Initialize the S3 client
 s3_client = boto3.client(
