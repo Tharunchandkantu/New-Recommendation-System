@@ -8,10 +8,30 @@ import pickle
 import streamlit as st
 import requests
 import boto3
-from botocore.exceptions import NoCredentialsError
+from botocore.exceptions import NoCredentialsError, ClientError
 import os
 
 
+def get_secret():
+    secret_name = "MovieMaze/AWSKeys"
+    region_name = "us-east-2"
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+    try:
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
+        )
+    except ClientError as e:
+        raise e
+    return get_secret_value_response['SecretString']
+
+# Retrieve AWS credentials from Secrets Manager
+aws_secrets = eval(get_secret())
+AWS_ACCESS_KEY_ID = aws_secrets["aws_access_key_id"]
+AWS_SECRET_ACCESS_KEY = aws_secrets["aws_secret_access_key"]
 
 # Initialize the S3 client
 s3_client = boto3.client(
@@ -42,7 +62,7 @@ try:
 except FileNotFoundError as e:
     st.error(f"Required file not found: {e}")
     st.stop()
-
+    
 def fetch_poster(movie_id):
     try:
         url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US"
